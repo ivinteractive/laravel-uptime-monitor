@@ -8,6 +8,7 @@ use GuzzleHttp\Promise\EachPromise;
 use Psr\Http\Message\ResponseInterface;
 use Spatie\UptimeMonitor\Models\Monitor;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\TransferStats;
 use GrahamCampbell\GuzzleFactory\GuzzleFactory;
 use Spatie\UptimeMonitor\Helpers\ConsoleOutput;
 
@@ -54,6 +55,10 @@ class MonitorCollection extends Collection
                     'connect_timeout' => config('uptime-monitor.uptime_check.timeout_per_site'),
                     'headers' => $this->promiseHeaders($monitor),
                     'body' => $monitor->uptime_check_payload,
+                    'on_stats' => function(TransferStats $stats) use ($monitor) {
+                        $monitor->response_time = $stats->getTransferTime();
+                        $monitor->save();
+                    }
                 ])
             );
 
