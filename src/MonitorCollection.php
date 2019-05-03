@@ -57,6 +57,7 @@ class MonitorCollection extends Collection
                     'body' => $monitor->uptime_check_payload,
                     'on_stats' => function(TransferStats $stats) use ($monitor) {
                         $monitor->response_time = $stats->getTransferTime();
+                        $monitor->ttfb = $stats->getHandlerStat('starttransfer_time');
                         $monitor->save();
                     }
                 ])

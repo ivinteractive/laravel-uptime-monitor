@@ -39,6 +39,7 @@ class CreateMonitorsTable extends Migration
             $table->string('certificate_check_failure_reason')->default('');
 
             $table->float('response_time', 10, 6)->nullable();
+            $table->float('ttfb', 10, 6)->nullable();
 
             $table->timestamps();
         });
